@@ -36,8 +36,10 @@ return a plot of the smoothed curve.
 }
 \description{
 This function returns the time to peak from time-intensity curve data. Raw data
-is smoothed using a loess smoother, and the time of peak is returned. It is recommended
-that plotresult is set to TRUE in the first instance to visually confirm the analysis.
+is smoothed using a loess smoother, and the time of peak is returned. Time to a
+specified proportion of the peak (e.g. time to 90\% of peak) can be calculated.
+It is recommended that plotresult is set to TRUE in the first instance to visually
+confirm the analysis.
 }
 \examples{
 
