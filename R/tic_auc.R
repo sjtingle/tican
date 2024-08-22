@@ -36,7 +36,7 @@
 #'
 #' tic_auc(data = example_data, timevar = "time", intensityvar = "regionA_intensity")
 #'
-#' # Example with additional argument:
+#' # Example with additional arguments:
 #'
 #' tic_auc(data = example_data, timevar = "time", intensityvar = "regionA_intensity",
 #'                    AUCmax = 30, plotresult = TRUE)

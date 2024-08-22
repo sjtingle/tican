@@ -56,7 +56,7 @@ example_data$regionB_intensity <- log(example_data$time + 7, base = 10) *
 
 ttpeak(data = example_data, timevar = "time", intensityvar = "regionA_intensity")
 
-# Example with additional argument:
+# Example with additional arguments:
 
 ttpeak(data = example_data, timevar = "time", intensityvar = "regionA_intensity",
                   loess.span = 0.1, peakproportion = 0.9, plotresult = TRUE)
