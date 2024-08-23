@@ -2,7 +2,6 @@ Package: tican
 Type: Package
 Title: Plot and Analyse Time-Intensity Data
 Version: 1.0.1
-Author: Samuel James Tingle
 Maintainer: Samuel James Tingle <samjamestingle@gmail.com>
 Description: Plots and analyzes time-intensity curve data, such as data from 
   (contrast-enhanced) ultrasound. Values such as peak intensity, time to 
