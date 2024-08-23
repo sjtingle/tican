@@ -1,10 +1,10 @@
 Package: tican
 Type: Package
 Title: Plot and Analyse Time-Intensity Data
-Version: 0.1.0
+Version: 1.0.0
 Author: SJ Tingle
 Maintainer: SJ Tingle <samjamestingle@gmail.com>
-Description: This function plots and analyzes time-intensity data, such as data from 
+Description: This function plots and analyzes time-intensity curve data, such as data from 
   (contrast-enhanced) ultrasound cineloops.
 License: MIT + file LICENSE
 Encoding: UTF-8
