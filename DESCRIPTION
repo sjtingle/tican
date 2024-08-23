@@ -1,11 +1,11 @@
 Package: tican
 Type: Package
 Title: Plot and Analyse Time-Intensity Data
-Version: 1.0.0
+Version: 1.0.1
 Author: Samuel James Tingle
-Maintainer: SJ Tingle <samjamestingle@gmail.com>
-Description: This package plots and analyzes time-intensity curve data, such as data from 
-  (contrast-enhanced) ultrasound cineloops. Values such as peak intensity, time to 
+Maintainer: Samuel James Tingle <samjamestingle@gmail.com>
+Description: Plots and analyzes time-intensity curve data, such as data from 
+  (contrast-enhanced) ultrasound. Values such as peak intensity, time to 
   peak and area under the curve are calculated.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -18,3 +18,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Authors@R: c(person(given = c("Samuel", "James"), family = "Tingle", role = c("aut", "cre"),
+           email = "samjamestingle@gmail.com"))
