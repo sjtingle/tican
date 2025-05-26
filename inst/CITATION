@@ -1,0 +1,31 @@
+bibentry(
+  bibtype = "Article",
+  title = "Contrast-Enhanced Ultrasound to Assess Kidney Quality During Ex Situ Normothermic Machine Perfusion",
+  author = c(
+    person(given = "Samuel J.", family = "Tingle"),
+    person(given = "Chloe", family = "Connelly"),
+    person(given = "Emily K.", family = "Glover"),
+    person(given = "Ben", family = "Stenberg"),
+    person(given = "Andrew", family = "McNeill"),
+    person(given = "Georgios", family = "Kourounis"),
+    person(given = "Beth G.", family = "Gibson"),
+    person(given = "Balaji", family = "Mahendran"),
+    person(given = "Lucy", family = "Bates"),
+    person(given = "Madison N.", family = "Cooper"),
+    person(given = "Rhys R.", family = "Pook"),
+    person(given = "Samantha", family = "Lee"),
+    person(given = "Marnie L.", family = "Brown"),
+    person(given = "Rodrigo", family = "Figueiredo"),
+    person(given = "Kevin J.", family = "Marchbank"),
+    person(given = "Simi", family = "Ali"),
+    person(given = "Neil S.", family = "Sheerin"),
+    person(given = "Colin H.", family = "Wilson"),
+    person(given = "Emily R.", family = "Thompson")
+  ),
+  year = "2025",
+  journal = "Transplant International",
+  volume = "38",
+  doi = "10.3389/ti.2025.14268",
+  url = "https://www.frontierspartnerships.org/journals/transplant-international/articles/10.3389/ti.2025.14268/full"
+)
+
