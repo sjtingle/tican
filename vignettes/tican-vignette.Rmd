@@ -10,7 +10,12 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7,      # inches
+  fig.height = 5,     # inches
+  dpi = 150,
+  out.width = "100%", # scale image to column width
+  fig.align = "center"
 )
 ```
 
@@ -22,26 +27,67 @@ library(tican)
 
 Using the tic_analyse requires a dataframe with a column indicating time values
 and at least one column with intensity values. Passing only the dataframe and name of these
-two columns will generate an intensity-time plot and return a dataframe with peak 
-intensity, time to peak and area under the curve (AUC). This analysis is performed by fitting
-a LOESS curve to the raw data, using the loess() function. AUC is calculated using the
-trapezium method for integration.
+two columns will generate a time-intensity plot and return a dataframe with peak 
+intensity, time to peak, and area under the curve (AUC). If selected, time to peak proportion, wash in rate (WiR) and wash out rate (WoR) are also returned. 
+This analysis is performed by fitting a LOESS curve to the raw data, using the loess() function. 
+WiR is the maximum upslope before the peak value. WoR (wash out rate) is the absolute value of 
+the maximum downslope following the peak value (with larger values representing higher wash out rate).
+AUC is calculated using the trapezium method for integration.
 
 Generated plots display the raw data as black dots, loess curve in red, with blue
-dashed lines showing calculated peak intensity and time to peak.
+dashed lines showing calculated peak intensity and time to peak, and solid purple lines showing WiR and WoR.
+
+```{r, include=FALSE}
+set.seed(123)
+time <- seq(0, 50, by = 0.5)
+
+# simulating data using gamma
+gamma_tic <- function(time, amplitude, arrival_time, alpha, beta, plateau) {
+  intensity <- numeric(length(time))
+  for (i in seq_along(time)) {
+    t <- time[i] - arrival_time
+    if (t <= 0) {
+      intensity[i] <- plateau
+    } else {
+      gamma_component <- amplitude * (t^alpha) * exp(-t/beta)
+      intensity[i] <- plateau + gamma_component
+    }
+  }
+  return(intensity)
+}
+
+# simulating data for 'regionA'
+regionA_intensity <- gamma_tic(
+  time = time,
+  amplitude = 20,
+  arrival_time = 5,
+  alpha = 2,
+  beta = 3,
+  plateau = 0
+) + rnorm(length(time), 0, 2.5)
+
+# simulating data for 'regionB'
+regionB_intensity <- gamma_tic(
+  time = time,
+  amplitude = 25,
+  arrival_time = 3,
+  alpha = 1.5,
+  beta = 2,
+  plateau = 0
+) + rnorm(length(time), 0, 1)
+
+
+example_data <- data.frame(
+  time = time,
+  regionA_intensity = regionA_intensity,
+  regionB_intensity = regionB_intensity
+)
+```
+
 
 ```{r}
 
-# Simulating example data
-set.seed(123)
-example_data <- data.frame(time = seq(0, 82, by = 0.25))
-random_vals <- sample(1:10, nrow(example_data), replace = TRUE)
-example_data$regionA_intensity <- log(example_data$time + 1) * 50 -
-  example_data$time * 2 + random_vals
-example_data$regionB_intensity <- log(example_data$time + 7, base = 10) *
-  80 - example_data$time * 1.5 + random_vals
-
-# Showing dataframe structure
+# Showing structure of example dataframe
 
 head(example_data,5)
 
@@ -64,7 +110,7 @@ using the peakproportion argument. This will be added to the plot as a dashed gr
 line.
 
 For area under the curve analysis a maximum time can be specified, for example AUC up
-to 10 seconds.
+to 30 seconds.
 
 ```{r}
 result <- tic_analyse(example_data,"time","regionA_intensity",
@@ -73,6 +119,29 @@ result <- tic_analyse(example_data,"time","regionA_intensity",
 
 print(result)
 ```
+
+### Wash in rate (WiR) and wash out rate (WoR)
+
+These are added by setting the `calc_wir` and/or `calc_wir` arguments to TRUE. 
+WiR is the maximum upslope before the peak value. WoR (wash out rate) is the absolute value of 
+the maximum downslope following the peak value (with larger values representing higher wash out rate). 
+These will be plotted with solid purple lines.
+
+Note WiR and WoR can be sensitive to noise in the data, and are therefore calculated from 
+the LOESS smoothed curve, and not the raw data. They are therefore sensitive to the degree of LOESS smoothing. 
+The degree of smoothing can be changed by altering `loess.span` as described in the next section.
+
+```{r}
+
+result <- tic_analyse(example_data,"time","regionA_intensity",
+                           calc_wir = TRUE,
+                           calc_wor = TRUE
+                      )
+
+print(result)
+
+```
+
 
 ### Adjusting the LOESS curve
 
@@ -83,7 +152,7 @@ be passed into the loess() function can be passed into tic_analyse().
 ```{r}
 
 result <- tic_analyse(example_data,"time","regionA_intensity",
-                           loess.span = 0.5, # altering from default of 0.1
+                           loess.span = 0.15, # altering from default of 0.1
                            degree = 1) # adding a loess() argument
 
 print(result)

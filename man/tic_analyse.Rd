@@ -11,6 +11,8 @@ tic_analyse(
   loess.span = 0.1,
   AUCmax = NULL,
   peakproportion = NULL,
+  calc_wir = FALSE,
+  calc_wor = FALSE,
   plotresult = TRUE,
   ...
 )
@@ -28,6 +30,10 @@ tic_analyse(
 
 \item{peakproportion}{A number between 0 and 1 which is used in the time to peak proportion calculations.}
 
+\item{calc_wir}{TRUE or FALSE to determine whether WiR is calculated.}
+
+\item{calc_wor}{TRUE or FALSE to determine whether WoR is calculated.}
+
 \item{plotresult}{TRUE or FALSE to determine whether a plot of the results is generated.}
 
 \item{...}{Additional arguments to be passed into the loess() function.}
@@ -41,38 +47,19 @@ This function plots and analyzes time-intensity data, such as data from (contras
 ultrasound cineloops. Peak intensity and time to peak intensity are calculated from a smoothed
 curve through the data (loess smoother). Area under the curve is calculated from the raw data
 using the trapezium method for integration. Time to peak proportion (for example time to
-90 percent of peak) can also be calculated. WiR (wash in rate) is the maximum upslope before
-the peak value. WoR (wash out rate) is the absolute value of the maximum downslope following
-the peak value (with larger values representing higher wash out rate).
+90 percent of peak) can also be calculated. If selected, WiR (wash in rate) is the maximum upslope before
+the peak value. If selected, WoR (wash out rate) is the absolute value of the maximum downslope following
+the peak value (with larger values representing higher wash out rate). Both WiR and WoR are calculated
+based on the slope of the LOESS curve, as they are sensitive to noise in the raw data.
 }
 \details{
-Blue dashed lines represent peak and time to peak values, solid purple lines
-represent WiR and WoR, and dashed green lines represent time to peak proportion (if
-selected).
+Blue dashed lines represent peak and time to peak values. If selected, solid purple lines
+represent WiR and WoR, and dashed green lines represent time to peak proportion.
 
 A plot of the data is generated and a dataframe with the results is returned.
 }
 \examples{
 
-# Example usage:
-
-# Generating simulated data
-set.seed(123)
-example_data <- data.frame(time = seq(0, 82, by = 0.25))
-random_vals <- sample(1:10, nrow(example_data), replace = TRUE)
-example_data$regionA_intensity <- log(example_data$time + 1) * 50 -
-  example_data$time * 2 + random_vals
-example_data$regionB_intensity <- log(example_data$time + 7, base = 10) *
-  80 - example_data$time * 1.5 + random_vals
-
-# Example with defaults:
-
-tic_analyse(data = example_data, timevar = "time", intensityvar = "regionA_intensity")
-
-# Example with additional arguments:
-
-tic_analyse(data = example_data, timevar = "time", intensityvar = "regionA_intensity",
-                  loess.span = 0.1, AUCmax = 30, peakproportion = 0.9, plotresult = TRUE)
-
+# Example usage: Please see package vignettes on CRAN
 
 }

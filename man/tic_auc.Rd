@@ -31,25 +31,6 @@ A plot of the data is generated and a dataframe with the results is returned.
 }
 \examples{
 
-# Example usage:
-
-# Generating simulated data
-set.seed(123)
-example_data <- data.frame(time = seq(0, 82, by = 0.25))
-random_vals <- sample(1:10, nrow(example_data), replace = TRUE)
-example_data$regionA_intensity <- log(example_data$time + 1) * 50 -
-  example_data$time * 2 + random_vals
-example_data$regionB_intensity <- log(example_data$time + 7, base = 10) *
-  80 - example_data$time * 1.5 + random_vals
-
-# Example with defaults:
-
-tic_auc(data = example_data, timevar = "time", intensityvar = "regionA_intensity")
-
-# Example with additional arguments:
-
-tic_auc(data = example_data, timevar = "time", intensityvar = "regionA_intensity",
-                   AUCmax = 30, plotresult = TRUE)
-
+# Example usage: Please see package vignettes on CRAN
 
 }

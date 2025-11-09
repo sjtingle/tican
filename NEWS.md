@@ -1,3 +1,7 @@
+# tican 1.1.0
+
+* Added options to calculate and plot wash in rate (WiR) and wash out rate (WoR)
+
 # tican 1.0.3
 
 * A message now appears on package load, reminding users to cite tican.

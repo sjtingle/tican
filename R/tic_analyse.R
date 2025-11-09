@@ -4,9 +4,10 @@
 #' ultrasound cineloops. Peak intensity and time to peak intensity are calculated from a smoothed
 #' curve through the data (loess smoother). Area under the curve is calculated from the raw data
 #' using the trapezium method for integration. Time to peak proportion (for example time to
-#' 90 percent of peak) can also be calculated. WiR (wash in rate) is the maximum upslope before
-#' the peak value. WoR (wash out rate) is the absolute value of the maximum downslope following
-#' the peak value (with larger values representing higher wash out rate).
+#' 90 percent of peak) can also be calculated. If selected, WiR (wash in rate) is the maximum upslope before
+#' the peak value. If selected, WoR (wash out rate) is the absolute value of the maximum downslope following
+#' the peak value (with larger values representing higher wash out rate). Both WiR and WoR are calculated
+#' based on the slope of the LOESS curve, as they are sensitive to noise in the raw data.
 #'
 #' Blue dashed lines represent peak and time to peak values. If selected, solid purple lines
 #' represent WiR and WoR, and dashed green lines represent time to peak proportion.
@@ -23,8 +24,8 @@
 #' @param AUCmax A number - the maximum time that area under the curve is measured until.
 #' @param peakproportion A number between 0 and 1 which is used in the time to peak proportion calculations.
 #' @param plotresult TRUE or FALSE to determine whether a plot of the results is generated.
-#' @param plotwir TRUE or FALSE to determine whether WiR is added to the plot.
-#' @param plotwor TRUE or FALSE to determine whether WoR is added to the plot.
+#' @param calc_wir TRUE or FALSE to determine whether WiR is calculated.
+#' @param calc_wor TRUE or FALSE to determine whether WoR is calculated.
 #' @param ... Additional arguments to be passed into the loess() function.
 #'
 #' @return A dataframe with the results. Depending on the plotresult argument can also
@@ -42,6 +43,8 @@ tic_analyse <- function(data,
                              loess.span=0.1,
                              AUCmax=NULL,
                              peakproportion=NULL,
+                             calc_wir = FALSE,
+                             calc_wor = FALSE,
                              plotresult=TRUE,
                              ...){ # ... allows any loess function arguments to be passed in
 
@@ -107,19 +110,22 @@ tic_analyse <- function(data,
     Time_to_peak_proportion <- x[which(yfit > Peak_intensity_proportion)[1]]
   }
 
-  # for wash in rate:
-  x_wir <- x[x <= Time_to_peak]
-  yfit_wir <- yfit[x <= Time_to_peak]
-  slopes_wir <- diff(yfit_wir) / diff(x_wir)
-  wir <- max(slopes_wir)
-  time_of_wir <- x_wir[which(slopes_wir == wir)[1] + 1]
+  if(calc_wir){
+    # for wash in rate:
+    x_wir <- x[x <= Time_to_peak]
+    yfit_wir <- yfit[x <= Time_to_peak]
+    slopes_wir <- diff(yfit_wir) / diff(x_wir)
+    wir <- max(slopes_wir)
+    time_of_wir <- x_wir[which(slopes_wir == wir)[1] + 1]
+  }
 
-  # for wash out rate:
-  x_wor <- x[x >= Time_to_peak]
-  yfit_wor <- yfit[x >= Time_to_peak]
-  slopes_wor <- diff(yfit_wor) / diff(x_wor)
-  wor <- min(slopes_wor)
-  time_of_wor <- x_wor[which(slopes_wor == wor)[1] + 1]
+  if(calc_wor){
+    x_wor <- x[x >= Time_to_peak]
+    yfit_wor <- yfit[x >= Time_to_peak]
+    slopes_wor <- diff(yfit_wor) / diff(x_wor)
+    wor <- min(slopes_wor)
+    time_of_wor <- x_wor[which(slopes_wor == wor)[1] + 1]
+  }
 
   if(plotresult==TRUE){
     # Plotting
@@ -132,11 +138,15 @@ tic_analyse <- function(data,
       abline(h = Peak_intensity_proportion, col = "darkgreen", lty = 2, lwd=3)
       abline(v = Time_to_peak_proportion, col = "darkgreen", lty = 2, lwd=3)
     }
+    if(calc_wir){
+      abline(a = yfit[which(x == time_of_wir)] - wir * time_of_wir,
+             b = wir, col = "purple", lwd = 3)
+    }
 
-    abline(a = yfit[which(x == time_of_wir)] - wir * time_of_wir,
-           b = wir, col = "purple", lwd = 3)
-    abline(a = yfit[which(x == time_of_wor)] - wor * time_of_wor,
-           b = wor, col = "purple", lwd = 3)
+    if(calc_wor){
+      abline(a = yfit[which(x == time_of_wor)] - wor * time_of_wor,
+             b = wor, col = "purple", lwd = 3)
+    }
 
     title(paste(timevar,intensityvar,sep=" - "))
   }
@@ -155,25 +165,21 @@ tic_analyse <- function(data,
   # Creating dataframe
 
   data_name <- deparse(substitute(data))
+  df <- data.frame(
+    data = data_name,
+    Peak_intensity = Peak_intensity,
+    Time_to_peak = Time_to_peak,
+    AUC = AUC
+  )
 
-  if(is.null(peakproportion)){
-    df <- data.frame(
-      data = data_name,
-      Peak_intensity = Peak_intensity,
-      Time_to_peak=Time_to_peak,
-      AUC=AUC,
-      WiR = wir,
-      WoR = abs(wor))
-  } else {
-    #making dataframe
-    df <- data.frame(
-      data = data_name,
-      Peak_intensity = Peak_intensity,
-      Time_to_peak=Time_to_peak,
-      Time_to_peak_proportion=Time_to_peak_proportion,
-      AUC=AUC,
-      WiR = wir,
-      WoR = abs(wor))
+  if(!is.null(peakproportion)){
+    df$Time_to_peak_proportion <- Time_to_peak_proportion
+  }
+  if(calc_wir){
+    df$WiR <- wir
+  }
+  if(calc_wor){
+    df$WoR <- abs(wor)
   }
 
   return(df)
