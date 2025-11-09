@@ -30,11 +30,26 @@ therefore refers to faster washout. It is recommended that
 plotresult is set to TRUE in the first instance to visually confirm the analysis.
 }
 \examples{
-# set.seed(123)
-# df <- data.frame(time = seq(0, 100, 1))
-# df$intensity <- c(rep(0,20),
-#                   seq(0,100,length.out=30),
-#                   seq(100,20,length.out=30),
-#                   rep(20,21)) + rnorm(nrow(df),0,3)
-# tic_wor(df, "time", "intensity", plotresult = TRUE)
+
+# Example usage:
+
+# Generating simulated data
+set.seed(123)
+example_data <- data.frame(time = seq(0, 82, by = 0.25))
+random_vals <- sample(1:10, nrow(example_data), replace = TRUE)
+example_data$regionA_intensity <- log(example_data$time + 1) * 50 -
+  example_data$time * 2 + random_vals
+example_data$regionB_intensity <- log(example_data$time + 7, base = 10) *
+  80 - example_data$time * 1.5 + random_vals
+
+# Example with defaults:
+
+tic_wor(data = example_data, timevar = "time", intensityvar = "regionA_intensity")
+
+# Example with additional arguments:
+
+tic_wor(data = example_data, timevar = "time", intensityvar = "regionA_intensity",
+                  loess.span = 0.1, plotresult = TRUE)
+
+
 }

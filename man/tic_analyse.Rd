@@ -41,9 +41,15 @@ This function plots and analyzes time-intensity data, such as data from (contras
 ultrasound cineloops. Peak intensity and time to peak intensity are calculated from a smoothed
 curve through the data (loess smoother). Area under the curve is calculated from the raw data
 using the trapezium method for integration. Time to peak proportion (for example time to
-90 percent of peak) can also be calculated.
+90 percent of peak) can also be calculated. WiR (wash in rate) is the maximum upslope before
+the peak value. WoR (wash out rate) is the absolute value of the maximum downslope following
+the peak value (with larger values representing higher wash out rate).
 }
 \details{
+Blue dashed lines represent peak and time to peak values, solid purple lines
+represent WiR and WoR, and dashed green lines represent time to peak proportion (if
+selected).
+
 A plot of the data is generated and a dataframe with the results is returned.
 }
 \examples{
