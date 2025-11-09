@@ -2,8 +2,11 @@
 
 export(tic_analyse)
 export(tic_auc)
+export(tic_wir)
+export(tic_wor)
 export(ttpeak)
 importFrom(graphics,abline)
 importFrom(graphics,lines)
+importFrom(graphics,plot)
 importFrom(graphics,title)
 importFrom(stats,loess)
