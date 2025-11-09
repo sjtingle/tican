@@ -21,27 +21,9 @@
 #'
 #' @examples
 #'
-#' # Example usage:
+#' # Example usage: Please see package vignettes on CRAN
 #'
-#' # Generating simulated data
-#' set.seed(123)
-#' example_data <- data.frame(time = seq(0, 82, by = 0.25))
-#' random_vals <- sample(1:10, nrow(example_data), replace = TRUE)
-#' example_data$regionA_intensity <- log(example_data$time + 1) * 50 -
-#'   example_data$time * 2 + random_vals
-#' example_data$regionB_intensity <- log(example_data$time + 7, base = 10) *
-#'   80 - example_data$time * 1.5 + random_vals
-#'
-#' # Example with defaults:
-#'
-#' tic_wor(data = example_data, timevar = "time", intensityvar = "regionA_intensity")
-#'
-#' # Example with additional arguments:
-#'
-#' tic_wor(data = example_data, timevar = "time", intensityvar = "regionA_intensity",
-#'                   loess.span = 0.1, plotresult = TRUE)
-#'
-#'
+
 
 tic_wor <- function(data,
                     timevar,
@@ -114,7 +96,7 @@ tic_wor <- function(data,
   lines(x,yfit,col="red",lwd=3) #plot the loess curve
   abline(h = Peak_intensity, col = "blue", lty = 2, lwd=3)
   abline(v = Time_to_peak, col = "blue", lty = 2, lwd=3)
-  # purple line to show WiR
+  # purple line to show WoR
   abline(a = yfit[which(x == time_of_wor)] - wor * time_of_wor,
          b = wor, col = "purple", lwd = 3)
   title(paste(timevar, intensityvar, sep = " - "))
